@@ -1,0 +1,37 @@
+{{ if .Values.networkPolicy.enabled }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: resumes
+spec:
+  endpointSelector:
+    matchLabels:
+      app: resumes
+  ingress:
+    - {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/name: kafka
+      toPorts:
+        - ports:
+            - port: "9092"
+              protocol: TCP
+          {{- if .Values.networkPolicy.enableKafkaEgressVisibility }}
+          rules:
+            kafka:
+              - {}
+          {{- end }}
+    - toEndpoints:
+        - matchLabels:
+            k8s:app: coreapi
+      toPorts:
+        - ports:
+            - port: "9080"
+              protocol: TCP
+          {{- if .Values.networkPolicy.enableHTTPEgressVisibility }}
+          rules:
+            http:
+              - {}
+          {{- end }}
+{{- end }}

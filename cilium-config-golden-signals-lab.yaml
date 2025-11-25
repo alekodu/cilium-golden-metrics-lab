@@ -1,4 +1,3 @@
-USER-SUPPLIED VALUES:
 hubble:
   metrics:
     dashboards:
@@ -7,6 +6,9 @@ hubble:
       enabled: true
       namespace: monitoring
     enableOpenMetrics: true
+    service:
+      type: ClusterIP
+      port: 9965
     enabled:
     - dns
     - drop
@@ -31,6 +33,7 @@ hubble:
       type: NodePort
 ipam:
   mode: kubernetes
+ipv4NativeRoutingCIDR: 10.244.0.0/18
 k8sServiceHost: 192.168.82.9
 k8sServicePort: 6443
 kubeProxyReplacement: true
@@ -43,6 +46,7 @@ operator:
 prometheus:
   enabled: true
   serviceMonitor:
+    trustCRDsExist: true
     enabled: true
 routingMode: tunnel
 tunnelProtocol: vxlan
